@@ -19,21 +19,34 @@ public class FileCommander {
     public void cd(Path path){
         this.path=this.path.resolve(path).normalize();
     }
-    public List<String> ls(){
+    public List<String> ls(Function<String,String> f){
         try{
             Comparator<Path> comp=(a,b)->Boolean.compare(Files.isDirectory(a),Files.isDirectory(b));
             return Files.list(path)
                     .sorted(comp)
                     .map(o->{
                         if(Files.isDirectory(o))
-                            return "[" +o.getFileName().toString()+ "]";
+                            return f.apply(o.getFileName().toString());
                         else return o.getFileName().toString();
                     })
                     .collect(Collectors.toList());
         }
         catch(IOException e){
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
+        }
+    }
+    public Function<String,String> bracket(){
+
+    }
+    public List<String> find(String search){
+        try{
+            return Files.walk(path)
+                    .filter(o->o.getFileName().toString().contains(search))
+                    .map(Path::toString)
+                    .collect(Collectors.toList());
+        }
+        catch(IOException e){
+            throw new RuntimeException(e);
         }
     }
 }
