@@ -21,7 +21,11 @@ public class FileCommander {
         try{
             return Files.list(path)
                     .sorted()
-                    .map(o->o.getFileName().toString())
+                    .map(o->{
+                        if(Files.isDirectory(o))
+                            return "[" +o.getFileName().toString()+ "]";
+                        else return o.getFileName().toString();
+                    })
                     .collect(Collectors.toList());
         }
         catch(IOException e){
