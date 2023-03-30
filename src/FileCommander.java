@@ -1,7 +1,9 @@
 import javax.imageio.IIOException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,8 +21,9 @@ public class FileCommander {
     }
     public List<String> ls(){
         try{
+            Comparator<Path> comp=(a,b)->Boolean.compare(Files.isDirectory(a),Files.isDirectory(b));
             return Files.list(path)
-                    .sorted()
+                    .sorted(comp)
                     .map(o->{
                         if(Files.isDirectory(o))
                             return "[" +o.getFileName().toString()+ "]";
