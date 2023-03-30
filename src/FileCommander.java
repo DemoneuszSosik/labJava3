@@ -26,6 +26,7 @@ public class FileCommander {
         }
         catch(IOException e){
             e.printStackTrace();
+            return null;
         }
     }
 }
